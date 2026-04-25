@@ -6,6 +6,7 @@ import '../screens/dashboard_screen.dart';
 import '../screens/collections_screen.dart';
 import '../screens/invoices_screen.dart';
 import '../screens/invoice_detail_screen.dart';
+import '../screens/profile_screen.dart';
 import 'providers.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -47,6 +48,10 @@ final routerProvider = Provider<GoRouter>((ref) {
               invoiceId: state.pathParameters['id']!,
             ),
           ),
+          GoRoute(
+            path: '/profile',
+            builder: (_, __) => const ProfileScreen(),
+          ),
         ],
       ),
     ],
@@ -60,10 +65,11 @@ class _AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final location = GoRouterState.of(context).matchedLocation;
-    int selectedIndex = switch (location) {
+    final selectedIndex = switch (location) {
       '/dashboard'   => 0,
       '/collections' => 1,
       '/invoices'    => 2,
+      '/profile'     => 3,
       _              => 0,
     };
 
@@ -76,12 +82,30 @@ class _AppShell extends StatelessWidget {
             case 0: context.go('/dashboard');
             case 1: context.go('/collections');
             case 2: context.go('/invoices');
+            case 3: context.go('/profile');
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.local_shipping_outlined), activeIcon: Icon(Icons.local_shipping), label: 'Collections'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), activeIcon: Icon(Icons.receipt_long), label: 'Invoices'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_shipping_outlined),
+            activeIcon: Icon(Icons.local_shipping),
+            label: 'Collections',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.receipt_long_outlined),
+            activeIcon: Icon(Icons.receipt_long),
+            label: 'Invoices',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outlined),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );

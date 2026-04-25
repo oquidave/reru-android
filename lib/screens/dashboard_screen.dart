@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../models/dashboard_data.dart';
 import '../models/collection.dart';
 import '../models/invoice.dart';
-import '../services/auth_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/formatters.dart';
@@ -20,20 +19,7 @@ class DashboardScreen extends ConsumerWidget {
     final dashboardAsync = ref.watch(dashboardProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Account'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout_outlined),
-            onPressed: () async {
-              final token = ref.read(authTokenProvider);
-              if (token != null) await AuthService.logout(token);
-              ref.read(authTokenProvider.notifier).state = null;
-              if (context.mounted) context.go('/login');
-            },
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text('My Account')),
       body: dashboardAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => _ErrorView(onRetry: () => ref.refresh(dashboardProvider)),
