@@ -31,7 +31,7 @@ class AuthService {
     final data = await client.post('/api/auth/login', {
       'email': email,
       'password': password,
-    });
+    }) as Map<String, dynamic>;
     final session = data['session'] as Map<String, dynamic>;
     final authSession = AuthSession(
       accessToken: session['access_token'] as String,
@@ -46,7 +46,7 @@ class AuthService {
     final client = ApiClient();
     final data = await client.post('/api/auth/refresh', {
       'refresh_token': refreshToken,
-    });
+    }) as Map<String, dynamic>;
     final session = data['session'] as Map<String, dynamic>;
     final authSession = AuthSession(
       accessToken: session['access_token'] as String,

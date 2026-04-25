@@ -16,7 +16,7 @@ class UserService {
       UserService._(ApiClient(accessToken: accessToken));
 
   Future<DashboardData> getDashboard() async {
-    final data = await _client.get('/api/user/dashboard');
+    final data = await _client.get('/api/user/dashboard') as Map<String, dynamic>;
     return DashboardData.fromJson(data);
   }
 
@@ -31,7 +31,7 @@ class UserService {
       'offset': '$offset',
     };
     final query = Uri(queryParameters: params).query;
-    final data = await _client.get('/api/user/collections?$query');
+    final data = await _client.get('/api/user/collections?$query') as Map<String, dynamic>;
     final list = data['data'] as List<dynamic>;
     return list.map((e) => Collection.fromJson(e as Map<String, dynamic>)).toList();
   }
@@ -50,7 +50,7 @@ class UserService {
   }
 
   Future<Invoice> getInvoice(String id) async {
-    final data = await _client.get('/api/user/invoices/$id');
+    final data = await _client.get('/api/user/invoices/$id') as Map<String, dynamic>;
     return Invoice.fromJson(data);
   }
 }

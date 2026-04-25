@@ -22,13 +22,13 @@ class ApiClient {
         if (accessToken != null) 'Authorization': 'Bearer $accessToken',
       };
 
-  Future<Map<String, dynamic>> get(String path) async {
+  Future<dynamic> get(String path) async {
     final uri = Uri.parse('$_baseUrl$path');
     final response = await http.get(uri, headers: _headers);
     return _handle(response);
   }
 
-  Future<Map<String, dynamic>> post(String path, Map<String, dynamic> body) async {
+  Future<dynamic> post(String path, Map<String, dynamic> body) async {
     final uri = Uri.parse('$_baseUrl$path');
     final response = await http.post(
       uri,
@@ -38,9 +38,9 @@ class ApiClient {
     return _handle(response);
   }
 
-  Map<String, dynamic> _handle(http.Response response) {
+  dynamic _handle(http.Response response) {
     final json = jsonDecode(response.body) as Map<String, dynamic>;
-    if (json['ok'] == true) return json['data'] as Map<String, dynamic>;
+    if (json['ok'] == true) return json['data'];
     throw ApiException(
       response.statusCode,
       json['error'] as String? ?? 'Unknown error',
