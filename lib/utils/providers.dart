@@ -3,6 +3,7 @@ import '../models/dashboard_data.dart';
 import '../models/collection.dart';
 import '../models/invoice.dart';
 import '../services/auth_service.dart';
+import '../services/cache_service.dart';
 import '../services/user_service.dart';
 
 // Auth token — set after login, cleared on logout
@@ -14,23 +15,95 @@ UserService _service(Ref ref) {
   return UserService.withToken(token!);
 }
 
-final dashboardProvider = FutureProvider<DashboardData>((ref) async {
-  return _service(ref).getDashboard();
-});
+// ── Dashboard ─────────────────────────────────────────────────────
 
-final collectionsProvider = FutureProvider.family<List<Collection>, String?>(
-  (ref, status) async => _service(ref).getCollections(status: status),
+class DashboardNotifier extends AsyncNotifier<DashboardData> {
+  @override
+  Future<DashboardData> build() async {
+    final cached = await CacheService.getDashboard();
+    if (cached != null) state = AsyncData(cached);
+    try {
+      final fresh = await _service(ref).getDashboard();
+      await CacheService.saveDashboard(fresh);
+      return fresh;
+    } catch (_) {
+      if (cached != null) return cached;
+      rethrow;
+    }
+  }
+}
+
+final dashboardProvider =
+    AsyncNotifierProvider<DashboardNotifier, DashboardData>(DashboardNotifier.new);
+
+// ── Collections ───────────────────────────────────────────────────
+
+class CollectionsNotifier extends FamilyAsyncNotifier<List<Collection>, String?> {
+  @override
+  Future<List<Collection>> build(String? status) async {
+    final cached = await CacheService.getCollections(status);
+    if (cached != null) state = AsyncData(cached);
+    try {
+      final fresh = await _service(ref).getCollections(status: status);
+      await CacheService.saveCollections(status, fresh);
+      return fresh;
+    } catch (_) {
+      if (cached != null) return cached;
+      rethrow;
+    }
+  }
+}
+
+final collectionsProvider = AsyncNotifierProvider.family<CollectionsNotifier, List<Collection>, String?>(
+  CollectionsNotifier.new,
 );
 
-final invoicesProvider = FutureProvider.family<List<Invoice>, String?>(
-  (ref, status) async => _service(ref).getInvoices(status: status),
+// ── Invoices ──────────────────────────────────────────────────────
+
+class InvoicesNotifier extends FamilyAsyncNotifier<List<Invoice>, String?> {
+  @override
+  Future<List<Invoice>> build(String? status) async {
+    final cached = await CacheService.getInvoices(status);
+    if (cached != null) state = AsyncData(cached);
+    try {
+      final fresh = await _service(ref).getInvoices(status: status);
+      await CacheService.saveInvoices(status, fresh);
+      return fresh;
+    } catch (_) {
+      if (cached != null) return cached;
+      rethrow;
+    }
+  }
+}
+
+final invoicesProvider = AsyncNotifierProvider.family<InvoicesNotifier, List<Invoice>, String?>(
+  InvoicesNotifier.new,
 );
 
-final invoiceDetailProvider = FutureProvider.family<Invoice, String>(
-  (ref, id) async => _service(ref).getInvoice(id),
+// ── Invoice detail ────────────────────────────────────────────────
+
+class InvoiceDetailNotifier extends FamilyAsyncNotifier<Invoice, String> {
+  @override
+  Future<Invoice> build(String id) async {
+    final cached = await CacheService.getInvoice(id);
+    if (cached != null) state = AsyncData(cached);
+    try {
+      final fresh = await _service(ref).getInvoice(id);
+      await CacheService.saveInvoice(fresh);
+      return fresh;
+    } catch (_) {
+      if (cached != null) return cached;
+      rethrow;
+    }
+  }
+}
+
+final invoiceDetailProvider = AsyncNotifierProvider.family<InvoiceDetailNotifier, Invoice, String>(
+  InvoiceDetailNotifier.new,
 );
 
-// Check stored session on app start
+// ── Session init (no caching needed) ─────────────────────────────
+
 final sessionInitProvider = FutureProvider<bool>((ref) async {
   final token = await AuthService.getValidAccessToken();
   if (token != null) {

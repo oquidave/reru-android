@@ -39,6 +39,20 @@ class Client {
         createdAt: json['created_at'] as String,
       );
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'user_id': userId,
+        'name': name,
+        'phone': phone,
+        'address': address,
+        'zone': zone,
+        'collection_day': collectionDay,
+        'plan': plan,
+        'status': status,
+        'paid_through': paidThrough,
+        'created_at': createdAt,
+      };
+
   bool get isActive => status == 'active';
   bool get isSuspended => status == 'suspended';
 }

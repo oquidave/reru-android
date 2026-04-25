@@ -30,6 +30,17 @@ class Collection {
         createdAt: json['created_at'] as String,
       );
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'client_id': clientId,
+        'scheduled_date': scheduledDate,
+        'status': status,
+        'bags_collected': bagsCollected,
+        'notes': notes,
+        'completed_at': completedAt,
+        'created_at': createdAt,
+      };
+
   bool get isScheduled  => status == 'scheduled';
   bool get isCompleted  => status == 'completed';
   bool get isMissed     => status == 'missed';

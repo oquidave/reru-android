@@ -17,6 +17,14 @@ class DashboardData {
     required this.overdueInvoiceCount,
   });
 
+  Map<String, dynamic> toJson() => {
+        'client': client.toJson(),
+        'next_collection': nextCollection?.toJson(),
+        'recent_collections': recentCollections.map((c) => c.toJson()).toList(),
+        'pending_invoice': pendingInvoice?.toJson(),
+        'overdue_invoice_count': overdueInvoiceCount,
+      };
+
   factory DashboardData.fromJson(Map<String, dynamic> json) => DashboardData(
         client: Client.fromJson(json['client'] as Map<String, dynamic>),
         nextCollection: json['next_collection'] != null

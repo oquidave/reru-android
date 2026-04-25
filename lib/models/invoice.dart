@@ -48,6 +48,23 @@ class Invoice {
         createdAt: json['created_at'] as String,
       );
 
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'client_id': clientId,
+        'date': date,
+        'plan': plan,
+        'qty': qty,
+        'unit_price': unitPrice,
+        'subtotal': subtotal,
+        'tax': tax,
+        'total': total,
+        'status': status,
+        'paid_at': paidAt,
+        'payment_method': paymentMethod,
+        'payment_ref': paymentRef,
+        'created_at': createdAt,
+      };
+
   bool get isPaid    => status == 'paid';
   bool get isPending => status == 'pending';
   bool get isOverdue => status == 'overdue';
