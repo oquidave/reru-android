@@ -22,7 +22,7 @@ Part of the [RERU platform](https://github.com/oquidave/reru). The REST API live
 
 - [Flutter 3.41+](https://docs.flutter.dev/get-started/install)
 - Android Studio (for emulator) or a physical Android device
-- Access to the RERU API at `https://reru.odukar.com`
+- Access to the RERU API at `https://reru.ug`
 
 ---
 
@@ -112,7 +112,7 @@ lib/
 - **State management:** Riverpod (`FutureProvider` for async data, `StateProvider` for auth token)
 - **Navigation:** GoRouter with a `ShellRoute` for the bottom nav tabs
 - **Auth:** Bearer tokens stored in Android Keystore via `flutter_secure_storage`. Token refresh is handled automatically before each request when the stored token is within 60 seconds of expiry
-- **API base URL:** `https://reru.odukar.com` (configured in `lib/services/api_client.dart`)
+- **API base URL:** `https://reru.ug` (configured in `lib/services/api_client.dart`)
 
 ---
 

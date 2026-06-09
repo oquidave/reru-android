@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-const _baseUrl = 'https://reru.odukar.com';
+const _baseUrl = 'https://reru.ug';
 
 class ApiException implements Exception {
   final int statusCode;
